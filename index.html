@@ -106,9 +106,9 @@
 
   <!-- ================= FIXED BLURRED BACKGROUND (bg.png) ================= -->
   <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-    <!-- ภาพ bg.png (เพิ่มความสว่างเป็น opacity-65 และเบลอแบบกำลังสวย blur-xl) -->
+    <!-- ภาพ bg.png -->
     <img src="bg.png" alt="Background" class="w-full h-full object-cover scale-105 filter blur-xl opacity-65">
-    <!-- ม่านดำบางๆ คลุมกันแสงจ้า (ลดเหลือ 40% - 60%) -->
+    <!-- ม่านดำบางๆ คลุมกันแสงจ้า -->
     <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/75"></div>
   </div>
 
@@ -570,56 +570,65 @@
     let isPlaying = false;
     let currentTrackIndex = -1;
 
-    // รายการ Showcase Demos (ส่วนบน)
+    // รายการ Showcase Demos (อัปเดตเป็น Track 1 - Track 6 ไฟล์ .mp3 ครบถ้วน)
     const SAMPLES = [
       {
         id: 1,
-        title: "POWER",
+        title: "Track 1",
         category: "Color Bass",
         bpm: 140,
         key: "E minor",
         duration: "2:53",
-        url: "demo 1.wav"
+        url: "demo 1.mp3"
       },
       {
         id: 2,
-        title: "Games (Flip)",
+        title: "Track 2",
         category: "Heavy Bass",
         bpm: 140,
         key: "F# Minor",
         duration: "2:21",
-        url: "demo 2.wav"
+        url: "demo 2.mp3"
       },
       {
         id: 3,
-        title: "MAKE ME FEEL",
+        title: "Track 3",
         category: "Tearout",
         bpm: 140,
         key: "D minor",
         duration: "2:24",
-        url: "demo 3.wav"
+        url: "demo 3.mp3"
       },
       {
         id: 4,
-        title: "ID",
+        title: "Track 4",
         category: "Melodic",
         bpm: 140,
         key: "D# Minor",
         duration: "1:30",
-        url: "demo 4.wav"
+        url: "demo 4.mp3"
       },
       {
         id: 5,
-        title: "Eyesight (Remix)",
+        title: "Track 5",
         category: "Bass & Vocals",
         bpm: 150,
         key: "E minor",
         duration: "0:41",
         url: "demo 5.mp3"
+      },
+      {
+        id: 6,
+        title: "Track 6",
+        category: "Color Bass",
+        bpm: 142,
+        key: "G minor",
+        duration: "2:15",
+        url: "demo 6.mp3"
       }
     ];
 
-    // รายการตัวอย่างเสียงใน Sample Sound Explorer (อัปเดตครบ 30 ไฟล์ตรงตามโฟลเดอร์ samples)
+    // รายการตัวอย่างเสียงใน Sample Sound Explorer (30 ไฟล์ในโฟลเดอร์ samples)
     const VAULT_SAMPLES = [
       // --- BASS LOOP (17 ไฟล์) ---
       { id: "bl_1", title: "Bass Loop 01", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_1.mp3" },
@@ -947,23 +956,26 @@
       if (!container) return;
 
       container.innerHTML = SAMPLES.map((sample, idx) => {
+        const isCurrentActive = currentTrackIndex === idx;
+        const isItemPlaying = isCurrentActive && isPlaying;
+
         return `
-          <div id="demo-row-${idx}" class="reveal-item flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-zinc-950/80 hover:bg-zinc-900 border border-zinc-800/80 hover:border-zinc-700 transition-all group backdrop-blur-xl shadow-lg" style="transition-delay: ${idx * 60}ms;">
+          <div id="demo-row-${idx}" class="reveal-item flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-zinc-950/80 hover:bg-zinc-900 border ${isCurrentActive ? 'border-red-500/60 shadow-lg shadow-red-950/30 bg-red-950/15' : 'border-zinc-800/80 hover:border-zinc-700'} transition-all group backdrop-blur-xl shadow-lg" style="transition-delay: ${idx * 60}ms;">
             
             <!-- ด้านซ้าย: ลำดับ, ปุ่ม Play ทรงกลมโมเดิร์น, ชื่อเพลง -->
             <div class="flex items-center gap-3.5 min-w-0">
-              <span id="demo-num-${idx}" class="font-mono text-xs text-zinc-600 w-4 text-center shrink-0">
+              <span id="demo-num-${idx}" class="font-mono text-xs ${isCurrentActive ? 'text-red-500 font-bold' : 'text-zinc-600'} w-4 text-center shrink-0">
                 0${idx + 1}
               </span>
 
-              <button id="demo-btn-${idx}" onclick="playTrack(${idx})" class="w-10 h-10 rounded-xl bg-black border border-zinc-800 text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center shrink-0 transition-all ios-btn-bounce shadow-sm">
-                <i id="demo-icon-${idx}" class="ph-fill ph-play text-sm ml-0.5"></i>
+              <button id="demo-btn-${idx}" onclick="playTrack(${idx})" class="w-10 h-10 rounded-xl ${isItemPlaying ? 'bg-red-600 text-white shadow-lg shadow-red-600/50' : 'bg-black border border-zinc-800 text-white hover:bg-red-600 hover:border-red-600'} flex items-center justify-center shrink-0 transition-all ios-btn-bounce shadow-sm">
+                <i id="demo-icon-${idx}" class="ph-fill ${isItemPlaying ? 'ph-pause' : 'ph-play'} text-sm ${isItemPlaying ? '' : 'ml-0.5'}"></i>
               </button>
 
               <div class="min-w-0">
                 <div class="text-sm font-bold text-white tracking-wide truncate group-hover:text-red-400 transition-colors flex items-center gap-2">
                   <span>${sample.title}</span>
-                  <span id="demo-ping-${idx}" class="hidden flex h-2 w-2 relative">
+                  <span id="demo-ping-${idx}" class="${isItemPlaying ? '' : 'hidden'} flex h-2 w-2 relative">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                   </span>
@@ -998,8 +1010,10 @@
       const filtered = VAULT_SAMPLES.filter(s => s.category === currentVaultFilter);
 
       container.innerHTML = filtered.map((item, idx) => {
+        const isItemPlaying = (currentVaultPlayingId === item.id) && isPlaying;
+        
         return `
-          <div id="vault-card-${item.id}" class="reveal-item flex items-center justify-between p-3.5 rounded-xl bg-zinc-950/80 hover:bg-zinc-900 border border-zinc-800/80 hover:border-zinc-700 transition-all group backdrop-blur-xl shadow-md" style="transition-delay: ${idx * 30}ms;">
+          <div id="vault-card-${item.id}" class="reveal-item flex items-center justify-between p-3.5 rounded-xl bg-zinc-950/80 hover:bg-zinc-900 border ${isItemPlaying ? 'border-red-500/60 shadow-lg shadow-red-950/30' : 'border-zinc-800/80 hover:border-zinc-700'} transition-all group backdrop-blur-xl shadow-md" style="transition-delay: ${idx * 30}ms;">
             
             <!-- Left: Play button and metadata -->
             <div class="flex items-center gap-3 min-w-0">
@@ -1010,7 +1024,7 @@
               <div class="min-w-0">
                 <div class="text-xs font-bold text-white truncate group-hover:text-red-400 transition-colors flex items-center gap-1.5">
                   <span>${item.title}</span>
-                  <span id="vault-ping-${item.id}" class="hidden w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
+                  <span id="vault-ping-${item.id}" class="${isItemPlaying ? '' : 'hidden'} w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
                 </div>
                 <div class="text-[10px] text-zinc-400 font-mono flex items-center gap-1 mt-0.5">
                   <span class="text-red-400 font-semibold uppercase">${item.category.replace('-', ' ')}</span>
