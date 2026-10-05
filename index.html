@@ -449,8 +449,8 @@
 
   </div> <!-- End Content Wrapper -->
 
-  <!-- iOS Dynamic Glass Capsule Player Bar -->
-  <div class="fixed bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-5xl ios-spring hover:-translate-y-1.5" id="floatingPlayerWrapper">
+  <!-- iOS Dynamic Glass Capsule Player Bar (ซ่อนไว้เป็นค่าเริ่มต้น ค่อยโชว์ตอนกดเล่นเสียง) -->
+  <div class="fixed bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-5xl ios-spring hover:-translate-y-1.5 translate-y-36 opacity-0 pointer-events-none transition-all duration-500 ease-out" id="floatingPlayerWrapper">
     <footer class="ios-glass-capsule rounded-3xl sm:rounded-full px-5 py-3 sm:py-3.5 transition-all duration-300">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6">
         
@@ -570,6 +570,14 @@
     let isPlaying = false;
     let currentTrackIndex = -1;
 
+    // ฟังก์ชันสั่งให้ Floating Player โชว์ขึ้นมาเมื่อมีการกดเล่นเพลง
+    function showFloatingPlayer() {
+      const player = document.getElementById('floatingPlayerWrapper');
+      if (player) {
+        player.classList.remove('translate-y-36', 'opacity-0', 'pointer-events-none');
+      }
+    }
+
     // รายการ Showcase Demos (อัปเดตเป็น Track 1 - Track 6 ไฟล์ .mp3 ครบถ้วน)
     const SAMPLES = [
       {
@@ -679,6 +687,8 @@
         pausePlayback();
         return;
       }
+
+      showFloatingPlayer();
 
       currentVaultPlayingId = null;
       currentTrackIndex = index;
@@ -956,26 +966,23 @@
       if (!container) return;
 
       container.innerHTML = SAMPLES.map((sample, idx) => {
-        const isCurrentActive = currentTrackIndex === idx;
-        const isItemPlaying = isCurrentActive && isPlaying;
-
         return `
-          <div id="demo-row-${idx}" class="reveal-item flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-zinc-950/80 hover:bg-zinc-900 border ${isCurrentActive ? 'border-red-500/60 shadow-lg shadow-red-950/30 bg-red-950/15' : 'border-zinc-800/80 hover:border-zinc-700'} transition-all group backdrop-blur-xl shadow-lg" style="transition-delay: ${idx * 60}ms;">
+          <div id="demo-row-${idx}" class="reveal-item flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-zinc-950/80 hover:bg-zinc-900 border border-zinc-800/80 hover:border-zinc-700 transition-all group backdrop-blur-xl shadow-lg" style="transition-delay: ${idx * 60}ms;">
             
             <!-- ด้านซ้าย: ลำดับ, ปุ่ม Play ทรงกลมโมเดิร์น, ชื่อเพลง -->
             <div class="flex items-center gap-3.5 min-w-0">
-              <span id="demo-num-${idx}" class="font-mono text-xs ${isCurrentActive ? 'text-red-500 font-bold' : 'text-zinc-600'} w-4 text-center shrink-0">
+              <span id="demo-num-${idx}" class="font-mono text-xs text-zinc-600 w-4 text-center shrink-0">
                 0${idx + 1}
               </span>
 
-              <button id="demo-btn-${idx}" onclick="playTrack(${idx})" class="w-10 h-10 rounded-xl ${isItemPlaying ? 'bg-red-600 text-white shadow-lg shadow-red-600/50' : 'bg-black border border-zinc-800 text-white hover:bg-red-600 hover:border-red-600'} flex items-center justify-center shrink-0 transition-all ios-btn-bounce shadow-sm">
-                <i id="demo-icon-${idx}" class="ph-fill ${isItemPlaying ? 'ph-pause' : 'ph-play'} text-sm ${isItemPlaying ? '' : 'ml-0.5'}"></i>
+              <button id="demo-btn-${idx}" onclick="playTrack(${idx})" class="w-10 h-10 rounded-xl bg-black border border-zinc-800 text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center shrink-0 transition-all ios-btn-bounce shadow-sm">
+                <i id="demo-icon-${idx}" class="ph-fill ph-play text-sm ml-0.5"></i>
               </button>
 
               <div class="min-w-0">
                 <div class="text-sm font-bold text-white tracking-wide truncate group-hover:text-red-400 transition-colors flex items-center gap-2">
                   <span>${sample.title}</span>
-                  <span id="demo-ping-${idx}" class="${isItemPlaying ? '' : 'hidden'} flex h-2 w-2 relative">
+                  <span id="demo-ping-${idx}" class="hidden flex h-2 w-2 relative">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                   </span>
@@ -1010,10 +1017,8 @@
       const filtered = VAULT_SAMPLES.filter(s => s.category === currentVaultFilter);
 
       container.innerHTML = filtered.map((item, idx) => {
-        const isItemPlaying = (currentVaultPlayingId === item.id) && isPlaying;
-        
         return `
-          <div id="vault-card-${item.id}" class="reveal-item flex items-center justify-between p-3.5 rounded-xl bg-zinc-950/80 hover:bg-zinc-900 border ${isItemPlaying ? 'border-red-500/60 shadow-lg shadow-red-950/30' : 'border-zinc-800/80 hover:border-zinc-700'} transition-all group backdrop-blur-xl shadow-md" style="transition-delay: ${idx * 30}ms;">
+          <div id="vault-card-${item.id}" class="reveal-item flex items-center justify-between p-3.5 rounded-xl bg-zinc-950/80 hover:bg-zinc-900 border border-zinc-800/80 hover:border-zinc-700 transition-all group backdrop-blur-xl shadow-md" style="transition-delay: ${idx * 30}ms;">
             
             <!-- Left: Play button and metadata -->
             <div class="flex items-center gap-3 min-w-0">
@@ -1024,7 +1029,7 @@
               <div class="min-w-0">
                 <div class="text-xs font-bold text-white truncate group-hover:text-red-400 transition-colors flex items-center gap-1.5">
                   <span>${item.title}</span>
-                  <span id="vault-ping-${item.id}" class="${isItemPlaying ? '' : 'hidden'} w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
+                  <span id="vault-ping-${item.id}" class="hidden w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
                 </div>
                 <div class="text-[10px] text-zinc-400 font-mono flex items-center gap-1 mt-0.5">
                   <span class="text-red-400 font-semibold uppercase">${item.category.replace('-', ' ')}</span>
@@ -1070,6 +1075,8 @@
         pausePlayback();
         return;
       }
+
+      showFloatingPlayer();
 
       currentVaultPlayingId = id;
       currentTrackIndex = -1;
