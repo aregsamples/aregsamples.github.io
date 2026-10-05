@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>areg Samples Packs</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons for music/player icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              purple: '#ef4444', // Red Accent
+              cyan: '#ffffff',   // White Accent
+              pink: '#dc2626',   // Deep Red
+              dark: '#000000',   // Pure Black
+              surface: '#0d0d0f',// Dark Surface
+              border: '#27272a'  // Subtle Border
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar and ambient neon glows */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #ef4444;
+    }
+    .neon-glow-purple {
+      box-shadow: 0 0 35px -5px rgba(239, 68, 68, 0.35);
+    }
+    .neon-glow-cyan {
+      box-shadow: 0 0 35px -5px rgba(255, 255, 255, 0.25);
+    }
+    .glass-panel {
+      background: rgba(13, 13, 15, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    /* iOS Spring Physics & Glassmorphism Tokens */
+    .ios-spring {
+      transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .ios-btn-bounce {
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .ios-btn-bounce:hover {
+      transform: scale(1.12) translateY(-1px);
+    }
+    .ios-btn-bounce:active {
+      transform: scale(0.88) translateY(1px);
+    }
+    .ios-glass-capsule {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(13, 13, 15, 0.75) 100%);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      box-shadow: 
+        0 24px 60px -12px rgba(0, 0, 0, 0.85),
+        0 10px 25px -5px rgba(239, 68, 68, 0.25),
+        inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 1px 0 rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+    .ios-glass-capsule:hover {
+      box-shadow: 
+        0 30px 70px -10px rgba(0, 0, 0, 0.9),
+        0 15px 35px -5px rgba(239, 68, 68, 0.35),
+        inset 0 1px 2px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 1px 0 rgba(0, 0, 0, 0.6);
+      border-color: rgba(239, 68, 68, 0.45);
+    }
+
+    /* Ultra-Smooth Scroll Reveal (เด้งเฉพาะตอนเลื่อนเมาส์ครั้งแรก) */
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(28px) scale(0.98);
+      transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-item.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  </style>
+</head>
+<body class="bg-black text-white antialiased min-h-screen selection:bg-red-600 selection:text-white flex flex-col justify-between pb-36 relative overflow-x-hidden">
+
+  <!-- ================= FIXED BLURRED BACKGROUND (bg.png) ================= -->
+  <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+    <!-- ภาพ bg.png (เพิ่มความสว่างเป็น opacity-65 และเบลอแบบกำลังสวย blur-xl) -->
+    <img src="bg.png" alt="Background" class="w-full h-full object-cover scale-105 filter blur-xl opacity-65">
+    <!-- ม่านดำบางๆ คลุมกันแสงจ้า (ลดเหลือ 40% - 60%) -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/75"></div>
+  </div>
+
+  <!-- Content Wrapper เพื่อให้อยู่เหนือพื้นหลัง -->
+  <div class="relative z-10 flex flex-col min-h-screen justify-between">
+
+    <!-- ================= TOP NAVIGATION BAR (GLASSMORPHISM) ================= -->
+    <nav class="sticky top-0 z-40 w-full bg-black/65 backdrop-blur-2xl border-b border-white/[0.08] transition-all">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+        
+        <!-- ซ้าย: Search Bar ค้นหาเสียง/ลูป -->
+        <div class="w-1/3 flex items-center justify-start">
+          <div class="relative w-full max-w-xs group">
+            <i class="ph ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-red-500 text-sm transition-colors"></i>
+            <input 
+              type="text" 
+              placeholder="Search sounds, stems..." 
+              class="w-full bg-zinc-950/80 hover:bg-zinc-900 focus:bg-black text-white text-xs rounded-xl pl-10 pr-10 py-2.5 border border-zinc-800/80 focus:border-red-500/80 focus:ring-1 focus:ring-red-500/40 outline-none transition-all placeholder:text-zinc-500"
+            >
+            <kbd class="hidden sm:inline-block absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-zinc-500 px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800">⌘K</kbd>
+          </div>
+        </div>
+
+        <!-- กลาง: โลโก้แบรนด์ -->
+        <div class="w-1/3 flex items-center justify-center">
+          <a href="#" class="flex items-center gap-3 group">
+            <div class="w-10 h-10 rounded-xl overflow-hidden border border-red-500/30 group-hover:border-red-500 transition-all shadow-lg shadow-red-600/20 bg-black flex items-center justify-center">
+              <img src="logo.png" alt="Logo" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+            </div>
+            <span class="text-base sm:text-lg font-black tracking-widest text-white uppercase group-hover:text-red-500 transition-colors hidden md:inline">
+              AREG<span class="text-red-500">SAMPLES</span>
+            </span>
+          </a>
+        </div>
+
+        <!-- ขวา: เมนู Samples, About, Login -->
+        <div class="w-1/3 flex items-center justify-end gap-3 sm:gap-6 text-xs font-mono">
+          <a href="#sample-vault" class="text-zinc-400 hover:text-white transition-colors font-semibold tracking-wider hidden sm:inline">
+            SAMPLES
+          </a>
+          <a href="#packs" class="text-zinc-400 hover:text-white transition-colors font-semibold tracking-wider hidden sm:inline">
+            ABOUT
+          </a>
+          <button onclick="showToast('Login portal opening soon!')" class="px-4 py-2 rounded-xl bg-white/[0.05] hover:bg-red-600/20 text-white hover:text-red-400 border border-white/10 hover:border-red-500/40 font-bold transition-all shadow-sm flex items-center gap-1.5 ios-btn-bounce">
+            <i class="ph-bold ph-user text-sm"></i>
+            <span>LOGIN</span>
+          </button>
+        </div>
+
+      </div>
+    </nav>
+
+    <!-- Header Banner -->
+    <header class="pt-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-gradient-to-br from-brand-surface/90 to-brand-surface/40 p-6 sm:p-10 rounded-2xl border border-red-500/20 neon-glow-purple backdrop-blur-xl">
+          
+          <!-- Album Artwork Column -->
+          <div class="lg:col-span-5 flex justify-center">
+            <div class="relative group w-full max-w-sm aspect-square rounded-2xl overflow-hidden shadow-2xl border border-zinc-800">
+              <div class="absolute inset-0 bg-gradient-to-tr from-red-600/30 via-transparent to-white/10 z-10 mix-blend-overlay"></div>
+              <!-- Custom Art Cover -->
+              <div class="w-full h-full p-8 flex flex-col justify-between items-center text-center relative overflow-hidden">
+                <img src="SAMPLES.png" alt="Cover Art" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/50"></div>
+
+                <div class="w-full flex justify-between items-center text-xs font-mono text-white relative z-10">
+                  <span>VOL. 01</span>
+                  <span class="px-2 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/40">COLOR BASS</span>
+                </div>
+
+                <div class="relative my-auto z-10">
+                  <div class="w-32 h-32 rounded-full border-2 border-dashed border-red-500/50 animate-spin flex items-center justify-center" style="animation-duration: 25s;">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-red-600 to-zinc-900 flex items-center justify-center shadow-lg shadow-red-600/50 border border-red-500/40">
+                      <i class="ph-fill ph-disc text-3xl text-white"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="relative z-10">
+                  <h3 class="text-2xl font-black tracking-tight text-white uppercase drop-shadow-md">PRISM SAMPLES PACKS</h3>
+                  <p class="text-xs text-zinc-300 font-mono mt-1">areg</p>
+                </div>
+              </div>
+
+              <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 z-20 backdrop-blur-sm">
+                <button onclick="playHeroDemo()" class="px-5 py-3 rounded-full bg-red-600 text-white font-bold text-sm flex items-center gap-2 hover:scale-105 transition-transform shadow-lg shadow-red-600/40">
+                  <i class="ph-fill ph-play text-lg"></i> Preview Demo
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Featured Pack Details -->
+          <div class="lg:col-span-7 flex flex-col gap-5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-600/20 text-red-400 border border-red-500/40">Featured Drop</span>
+              <span class="px-3 py-1 rounded-full text-xs font-medium text-white bg-zinc-800 border border-zinc-700">Royalty Free</span>
+              <span class="px-3 py-1 rounded-full text-xs font-medium text-white bg-red-950/60 border border-red-600/40">1.2 GB Unzipped</span>
+            </div>
+
+            <div>
+              <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+                PRISM VOL.1 <br/>
+                <span class="bg-gradient-to-r from-red-500 via-white to-zinc-400 bg-clip-text text-transparent">BASS & COLORS</span>
+              </h1>
+              <ul class="text-zinc-400 mt-3 text-sm sm:text-base space-y-1.5 font-mono">
+                <li class="flex items-center gap-2">
+                  <span class="text-red-500 font-bold">•</span> Instant Download
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-red-500 font-bold">•</span> Color Bass Vol.1
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-red-500 font-bold">•</span> 50+ Samples
+                </li>
+              </ul>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 py-2 border-y border-zinc-800">
+              <div>
+                <div class="text-xs text-zinc-500 font-mono">BPM RANGE</div>
+                <div class="text-base sm:text-lg font-bold text-white">128 - 150</div>
+              </div>
+              <div>
+                <div class="text-xs text-zinc-500 font-mono">TOTAL FILES</div>
+                <div class="text-base sm:text-lg font-bold text-white">50+ FILES</div>
+              </div>
+              <div>
+                <div class="text-xs text-zinc-500 font-mono">COMPATIBILITY</div>
+                <div class="text-base sm:text-lg font-bold text-white">Any DAW</div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-4 pt-2">
+              <button onclick="playHeroDemo()" id="heroDemoBtn" class="px-6 py-3.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700 text-white font-semibold text-sm flex items-center gap-2 transition-all">
+                <i class="ph-fill ph-play text-red-500 text-lg" id="heroDemoIcon"></i>
+                <span id="heroDemoLabel">Listen Demo Stems</span>
+              </button>
+              <button onclick="openCheckoutModal('PRISM VOL.1 (Full Pack)', 29.99)" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-red-600/40 transition-all hover:scale-[1.02]">
+                <i class="ph-bold ph-download-simple text-lg"></i>
+                Get Full Pack • $29.99
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1" id="explorer">
+      
+      <!-- ================= PART 1: SHOWCASE DEMOS ================= -->
+      <section class="mb-14">
+        <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-600/10 border border-red-500/30 text-red-400 text-xs font-mono uppercase tracking-wider mb-2">
+              <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+              Full Stems In-Context
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center gap-2">
+              Showcase Demos
+            </h2>
+            <p class="text-zinc-400 text-sm mt-1">Direct master preview • All songs produced with PRISM VOL.1</p>
+          </div>
+        </div>
+
+        <!-- Live Waveform & Visualizer Stage -->
+        <div class="mb-6 p-4 rounded-2xl bg-zinc-950/80 border border-zinc-800/80 backdrop-blur-xl flex flex-col md:flex-row items-center gap-4 shadow-2xl">
+          <div class="flex items-center gap-3.5 w-full md:w-auto">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-600/20 to-black border border-red-500/30 flex items-center justify-center shrink-0">
+              <i class="ph-duotone ph-equalizer text-red-500 text-2xl animate-pulse"></i>
+            </div>
+            <div class="min-w-[170px]">
+              <div class="text-[11px] uppercase font-mono text-red-500 tracking-wider font-semibold" id="visStatus">READY TO PLAY</div>
+              <div class="text-base font-bold text-white truncate" id="visTitle">Select a demo below</div>
+            </div>
+          </div>
+
+          <div class="w-full flex-1 h-12 rounded-xl bg-black overflow-hidden relative border border-zinc-800/80">
+            <canvas id="waveformCanvas" class="w-full h-full block"></canvas>
+          </div>
+        </div>
+
+        <!-- Modern Showcase Demos List -->
+        <div class="space-y-2.5" id="demosListContainer">
+          <!-- Render ผ่าน JavaScript อัตโนมัติ -->
+        </div>
+      </section>
+
+      <!-- ================= PART 2: HIGH-END SAMPLE VAULT ================= -->
+      <section class="mt-20 pt-10 border-t border-zinc-900/80" id="sample-vault">
+        <!-- ส่วนหัวข้อหลักจัดกึ่งกลาง -->
+        <div class="text-center max-w-2xl mx-auto mb-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-600/10 border border-red-500/30 text-red-400 text-xs font-mono uppercase tracking-wider mb-2">
+            <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+            Studio Stems & One-Shots
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            Sample Sound Explorer
+          </h2>
+          <p class="text-zinc-400 text-sm mt-1">Key & tempo labeled loops, one-shots, and FX stems.</p>
+        </div>
+
+        <!-- แถบเมนูกระจกใส (Glassmorphism Capsule) กึ่งกลางหน้าจอ -->
+        <div class="flex justify-center mb-8">
+          <div class="inline-flex items-center gap-1.5 p-1.5 rounded-2xl bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] overflow-x-auto text-[11px] font-mono">
+            <button onclick="filterVault('bass-loop')" class="vault-tab-btn px-4 py-2 rounded-xl bg-red-600 text-white font-bold transition-all shadow-lg shadow-red-600/40" data-category="bass-loop">BASS LOOP</button>
+            <button onclick="filterVault('bass-shot')" class="vault-tab-btn px-4 py-2 rounded-xl text-zinc-400 hover:text-white transition-all font-semibold" data-category="bass-shot">BASS SHOT</button>
+            <button onclick="filterVault('fx')" class="vault-tab-btn px-4 py-2 rounded-xl text-zinc-400 hover:text-white transition-all font-semibold" data-category="fx">FX</button>
+            <button onclick="filterVault('melody')" class="vault-tab-btn px-4 py-2 rounded-xl text-zinc-400 hover:text-white transition-all font-semibold" data-category="melody">MELODY</button>
+            <button onclick="filterVault('drums')" class="vault-tab-btn px-4 py-2 rounded-xl text-zinc-400 hover:text-white transition-all font-semibold" data-category="drums">DRUMS</button>
+            <button onclick="filterVault('vocal')" class="vault-tab-btn px-4 py-2 rounded-xl text-zinc-400 hover:text-white transition-all font-semibold" data-category="vocal">VOCAL</button>
+          </div>
+        </div>
+
+        <!-- Compact High-End Studio Strips Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5" id="vaultSamplesGrid">
+          <!-- Render ผ่าน JavaScript อัตโนมัติ -->
+        </div>
+      </section>
+
+      <!-- ================= PART 3: PACKS & BUNDLES ================= -->
+      <section class="mt-24" id="packs">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <h2 class="text-3xl font-black text-white tracking-tight">Sound Packs & Bundles</h2>
+          <p class="text-zinc-400 text-sm mt-2">Every pack contains key & tempo-labeled WAV stems, 100% royalty-free for commercial streaming and beat licensing.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Pack Card 1 (PRODUCER) -->
+          <div class="rounded-2xl bg-zinc-950/80 backdrop-blur-xl border border-zinc-800 p-6 flex flex-col justify-between hover:border-red-500/50 transition-all group">
+            <div>
+              <div class="w-full h-44 rounded-xl flex flex-col justify-between p-4 mb-5 border border-red-500/20 relative overflow-hidden bg-black">
+                <img src="PRODUCER_PACK.png" alt="Producer Pack" class="absolute inset-0 w-full h-full object-contain p-2">
+                <div class="absolute inset-0 bg-black/25 pointer-events-none"></div>
+
+                <span class="relative z-10 px-2.5 py-1 rounded bg-black/80 text-red-400 border border-red-500/30 text-[11px] font-mono w-fit font-bold">PRODUCER TIER</span>
+                <div class="relative z-10">
+                  <h4 class="text-xl font-black text-white drop-shadow-md">PRODUCER</h4>
+                  <p class="text-xs text-zinc-300 font-mono">Analog Synth & R&B Rhodes</p>
+                </div>
+              </div>
+              <p class="text-xs text-zinc-400 mb-4 leading-relaxed">
+                Warm neo-soul chords, spaced-out vintage synthesizers, and tape-processed piano lines.
+              </p>
+              <ul class="text-xs text-zinc-300 space-y-2 mb-6 font-mono">
+                <li class="flex items-center gap-2"><i class="ph-bold ph-check text-red-500"></i> 65 Melody Loops + MIDI</li>
+                <li class="flex items-center gap-2"><i class="ph-bold ph-check text-red-500"></i> 24-Bit WAV / Drag & Drop</li>
+                <li class="flex items-center gap-2"><i class="ph-bold ph-check text-red-500"></i> Commercial Clearance</li>
+              </ul>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-zinc-800">
+              <div>
+                <span class="text-xs text-zinc-500 block font-mono">Instant Download</span>
+                <span class="text-xl font-bold text-white">$19.99</span>
+              </div>
+              <button onclick="openCheckoutModal('Producer Pack', 19.99)" class="px-4 py-2.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-semibold text-xs flex items-center gap-2 transition-transform active:scale-95 shadow-md shadow-red-600/30">
+                <i class="ph-bold ph-shopping-cart"></i> Buy Pack
+              </button>
+            </div>
+          </div>
+
+          <!-- Pack Card 2 (FULL PACKS) -->
+          <div class="rounded-2xl bg-zinc-950/80 backdrop-blur-xl border-2 border-red-500/60 p-6 flex flex-col justify-between relative shadow-xl shadow-red-500/10 group">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-red-600 text-white font-black text-[10px] tracking-widest uppercase shadow-md shadow-red-600/50">
+              BEST VALUE
+            </div>
+            <div>
+              <div class="w-full h-44 rounded-xl flex flex-col justify-between p-4 mb-5 border border-red-500/40 relative overflow-hidden bg-black">
+                <img src="FULL_PACK.png" alt="Full Pack" class="absolute inset-0 w-full h-full object-contain p-2">
+                <div class="absolute inset-0 bg-black/25 pointer-events-none"></div>
+
+                <span class="relative z-10 px-2.5 py-1 rounded bg-black/80 text-white border border-white/20 text-[11px] font-mono w-fit font-bold">COMPLETE BUNDLE</span>
+                <div class="relative z-10">
+                  <h4 class="text-xl font-black text-white drop-shadow-md">FULL PACKS</h4>
+                  <p class="text-xs text-zinc-300 font-mono">Full Packs + Exclusive Drum Kit</p>
+                </div>
+              </div>
+              <p class="text-xs text-zinc-400 mb-4 leading-relaxed">
+                Unlock our flagship sound archive with over 550+ melody stems, drum loops, 808s, and vocal chops.
+              </p>
+              <ul class="text-xs text-zinc-300 space-y-2 mb-6 font-mono">
+                <li class="flex items-center gap-2"><i class="ph-bold ph-check text-red-500"></i> 550+ Stems & One-Shots</li>
+                <li class="flex items-center gap-2"><i class="ph-bold ph-check text-red-500"></i> 100% Royalty-Free Rights</li>
+                <li class="flex items-center gap-2"><i class="ph-bold ph-check text-red-500"></i> Lifetime Free Updates</li>
+              </ul>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-zinc-800">
+              <div>
+                <span class="text-xs text-zinc-500 line-through font-mono mr-1">$79.99</span>
+                <span class="text-xl font-bold text-white">$39.99</span>
+              </div>
+              <button onclick="openCheckoutModal('Full Pack Bundle', 39.99)" class="px-4 py-2.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex items-center gap-2 transition-transform active:scale-95 shadow-md shadow-red-600/40">
+                <i class="ph-bold ph-lightning"></i> Get Bundle
+              </button>
+            </div>
+          </div>
+
+          <!-- Pack Card 3 (BETA) -->
+          <div class="rounded-2xl bg-zinc-950/80 backdrop-blur-xl border border-zinc-800 p-6 flex flex-col justify-between hover:border-zinc-600 transition-all group">
+            <div>
+              <div class="w-full h-44 rounded-xl flex flex-col justify-between p-4 mb-5 border border-zinc-800 relative overflow-hidden bg-black">
+                <img src="BETA_PACK.png" alt="Beta Pack" class="absolute inset-0 w-full h-full object-contain p-2">
+                <div class="absolute inset-0 bg-black/25 pointer-events-none"></div>
+
+                <span class="relative z-10 px-2.5 py-1 rounded bg-black/80 text-zinc-300 border border-zinc-700 text-[11px] font-mono w-fit font-bold">FREE TIER</span>
+                <div class="relative z-10">
+                  <h4 class="text-xl font-black text-white drop-shadow-md">BETA</h4>
+                  <p class="text-xs text-zinc-300 font-mono">Essential Loops Starter Pack</p>
+                </div>
+              </div>
+              <p class="text-xs text-zinc-400 mb-4 leading-relaxed">
+                Test drive the library with 25 curated loops to kickstart your next production right now.
+              </p>
+              <ul class="text-xs text-zinc-300 space-y-2 mb-6 font-mono">
+                <li class="flex items-center gap-2"><i class="ph-bold ph-check text-zinc-400"></i> 25 Studio Samples</li>
+                <li class="flex items-center gap-2"><i class="ph-bold ph-check text-zinc-400"></i> Key & BPM labeled</li>
+                <li class="flex items-center gap-2"><i class="ph-bold ph-check text-zinc-400"></i> No Credit Card Required</li>
+              </ul>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-zinc-800">
+              <div>
+                <span class="text-xs text-zinc-500 block font-mono">Free Download</span>
+                <span class="text-xl font-bold text-white">$0.00</span>
+              </div>
+              <button onclick="openCheckoutModal('Beta Starter Pack', 0)" class="px-4 py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700 font-semibold text-xs flex items-center gap-2 transition-transform active:scale-95">
+                <i class="ph-bold ph-arrow-down"></i> Free Pack
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div> <!-- End Content Wrapper -->
+
+  <!-- iOS Dynamic Glass Capsule Player Bar -->
+  <div class="fixed bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-5xl ios-spring hover:-translate-y-1.5" id="floatingPlayerWrapper">
+    <footer class="ios-glass-capsule rounded-3xl sm:rounded-full px-5 py-3 sm:py-3.5 transition-all duration-300">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6">
+        
+        <div class="flex items-center gap-3.5 w-full sm:w-1/3 min-w-0">
+          <div class="relative group shrink-0">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-red-600/30 to-white/10 border border-white/20 flex items-center justify-center text-white shadow-inner ios-btn-bounce cursor-pointer overflow-hidden backdrop-blur-md" onclick="toggleMainPlayback()">
+              <i class="ph-fill ph-music-note text-xl text-white drop-shadow-md" id="bottomDiscIcon"></i>
+              <div class="absolute inset-0 bg-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="text-xs sm:text-sm font-semibold text-white tracking-wide truncate drop-shadow-sm flex items-center gap-2" id="bottomTrackTitle">
+              <span>Select a loop to play</span>
+            </div>
+            <div class="text-[11px] text-zinc-400 font-mono flex items-center gap-1.5 mt-0.5" id="bottomTrackMeta">
+              <span>-- BPM</span> • <span>-- Key</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-center gap-1.5 w-full sm:w-2/5">
+          <div class="flex items-center gap-5">
+            <button onclick="stepTrack(-1)" class="text-zinc-300 hover:text-white ios-btn-bounce p-1.5 focus:outline-none" title="Previous stem">
+              <i class="ph-fill ph-caret-double-left text-lg"></i>
+            </button>
+            <button onclick="toggleMainPlayback()" id="mainPlayBtn" class="w-11 h-11 rounded-full bg-red-600 text-white flex items-center justify-center ios-btn-bounce shadow-[0_8px_20px_rgba(239,68,68,0.5)] focus:outline-none ring-2 ring-red-400">
+              <i class="ph-fill ph-play text-lg ml-0.5" id="mainPlayIcon"></i>
+            </button>
+            <button onclick="stepTrack(1)" class="text-zinc-300 hover:text-white ios-btn-bounce p-1.5 focus:outline-none" title="Next stem">
+              <i class="ph-fill ph-caret-double-right text-lg"></i>
+            </button>
+          </div>
+          
+          <div class="w-full flex items-center gap-2.5 text-[11px] font-mono text-zinc-400 select-none">
+            <span id="currentTimeLabel" class="w-8 text-right font-medium text-white">0:00</span>
+            <div class="flex-1 bg-black/60 hover:bg-black/70 border border-white/10 h-2 rounded-full overflow-hidden relative cursor-pointer ios-spring group" id="progressBarContainer" onclick="seekAudio(event)">
+              <div id="progressBar" class="h-full bg-gradient-to-r from-red-600 to-red-400 w-0 rounded-full shadow-[0_0_12px_rgba(239,68,68,0.8)] relative transition-all duration-75">
+                <span class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white opacity-0 group-hover:opacity-100 shadow-md"></span>
+              </div>
+            </div>
+            <span id="totalTimeLabel" class="w-8 font-medium text-white">0:00</span>
+          </div>
+        </div>
+
+        <!-- Volume Only -->
+        <div class="flex items-center justify-end gap-3 w-full sm:w-1/3">
+          <div class="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
+            <i class="ph-fill ph-speaker-high text-white text-xs"></i>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.75" class="w-20 sm:w-28 h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-red-500" oninput="setGlobalVolume(this.value)">
+          </div>
+        </div>
+
+      </div>
+    </footer>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
+    <div class="bg-zinc-950 border border-zinc-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1">
+        <i class="ph-bold ph-x text-lg"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-red-600/20 border border-red-500/40 text-red-500 flex items-center justify-center">
+          <i class="ph-bold ph-package text-xl"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-white" id="modalPackTitle">Instant Checkout</h3>
+          <p class="text-xs text-zinc-400" id="modalPackSubtitle">High Quality 24-Bit WAV Audio</p>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-black border border-zinc-800 mb-5 space-y-2">
+        <div class="flex justify-between text-xs text-zinc-400">
+          <span>License Type</span>
+          <span class="text-white font-mono">100% Royalty Free</span>
+        </div>
+        <div class="flex justify-between text-xs text-zinc-400">
+          <span>Format</span>
+          <span class="text-white font-mono">WAV (24-bit, 44.1kHz) + Stems</span>
+        </div>
+        <div class="border-t border-zinc-800 pt-2 flex justify-between text-sm font-bold text-white">
+          <span>Total</span>
+          <span class="text-red-500 font-mono" id="modalPackPrice">$0.00</span>
+        </div>
+      </div>
+
+      <form onsubmit="handleOrderSubmission(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-mono text-zinc-300 mb-1">Your Producer / Beatmaker Email</label>
+          <input type="email" required placeholder="producer@studio.com" class="w-full px-3 py-2 text-sm bg-black border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-red-500">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-600/40 transition-all">
+          <i class="ph-bold ph-check-circle text-lg"></i>
+          <span id="modalSubmitText">Complete Order & Receive Links</span>
+        </button>
+      </form>
+
+      <p class="text-[11px] text-zinc-500 text-center mt-3 font-mono">
+        Instant secure delivery powered by areg.
+      </p>
+    </div>
+  </div>
+
+  <div id="toastMessage" class="fixed top-5 right-5 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="glass-panel border border-red-500/40 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 text-xs font-medium">
+      <i class="ph-bold ph-check-circle text-red-500 text-base"></i>
+      <span id="toastText">Action completed</span>
+    </div>
+  </div>
+
+  <script>
+    // Audio Player Object
+    let audioPlayer = new Audio();
+    audioPlayer.preload = "auto";
+    let isPlaying = false;
+    let currentTrackIndex = -1;
+
+    // รายการ Showcase Demos (ส่วนบน)
+    const SAMPLES = [
+      {
+        id: 1,
+        title: "POWER",
+        category: "Color Bass",
+        bpm: 140,
+        key: "E minor",
+        duration: "2:53",
+        url: "demo 1.wav"
+      },
+      {
+        id: 2,
+        title: "Games (Flip)",
+        category: "Heavy Bass",
+        bpm: 140,
+        key: "F# Minor",
+        duration: "2:21",
+        url: "demo 2.wav"
+      },
+      {
+        id: 3,
+        title: "MAKE ME FEEL",
+        category: "Tearout",
+        bpm: 140,
+        key: "D minor",
+        duration: "2:24",
+        url: "demo 3.wav"
+      },
+      {
+        id: 4,
+        title: "ID",
+        category: "Melodic",
+        bpm: 140,
+        key: "D# Minor",
+        duration: "1:30",
+        url: "demo 4.wav"
+      },
+      {
+        id: 5,
+        title: "Eyesight (Remix)",
+        category: "Bass & Vocals",
+        bpm: 150,
+        key: "E minor",
+        duration: "0:41",
+        url: "demo 5.mp3"
+      }
+    ];
+
+    // รายการตัวอย่างเสียงใน Sample Sound Explorer (อัปเดตครบ 30 ไฟล์ตรงตามโฟลเดอร์ samples)
+    const VAULT_SAMPLES = [
+      // --- BASS LOOP (17 ไฟล์) ---
+      { id: "bl_1", title: "Bass Loop 01", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_1.mp3" },
+      { id: "bl_2", title: "Bass Loop 02", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_2.mp3" },
+      { id: "bl_3", title: "Bass Loop 03", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_3.mp3" },
+      { id: "bl_4", title: "Bass Loop 04", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_4.mp3" },
+      { id: "bl_5", title: "Bass Loop 05", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_5.mp3" },
+      { id: "bl_6", title: "Bass Loop 06", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_6.mp3" },
+      { id: "bl_7", title: "Bass Loop 07", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_7.mp3" },
+      { id: "bl_8", title: "Bass Loop 08", category: "bass-loop", bpm: 140, key: "areg", url: "samples/bass_loop_8.mp3" },
+      { id: "bl_9", title: "Bass Loop 09", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_9.mp3" },
+      { id: "bl_10", title: "Bass Loop 10", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_10.mp3" },
+      { id: "bl_11", title: "Bass Loop 11", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_11.mp3" },
+      { id: "bl_12", title: "Bass Loop 12", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_12.mp3" },
+      { id: "bl_13", title: "Bass Loop 13", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_13.mp3" },
+      { id: "bl_14", title: "Bass Loop 14", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_14.mp3" },
+      { id: "bl_15", title: "Bass Loop 15", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_15.mp3" },
+      { id: "bl_16", title: "Bass Loop 16", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_16.mp3" },
+      { id: "bl_17", title: "Bass Loop 17", category: "bass-loop", bpm: 140, key: "Color Bass", url: "samples/bass_loop_17.mp3" },
+
+      // --- BASS SHOT (4 ไฟล์) ---
+      { id: "bs_1", title: "Bass Shot 01", category: "bass-shot", bpm: "ONE-SHOT", key: "Heavy", url: "samples/bass_shot_1.mp3" },
+      { id: "bs_2", title: "Bass Shot 02", category: "bass-shot", bpm: "ONE-SHOT", key: "Punch", url: "samples/bass_shot_2.mp3" },
+      { id: "bs_3", title: "Bass Shot 03", category: "bass-shot", bpm: "ONE-SHOT", key: "Formant", url: "samples/bass_shot_3.mp3" },
+      { id: "bs_4", title: "Bass Shot 04", category: "bass-shot", bpm: "ONE-SHOT", key: "Growl", url: "samples/bass_shot_4.mp3" },
+
+      // --- FX (1 ไฟล์) ---
+      { id: "fx_1", title: "Cyber FX 01", category: "fx", bpm: 140, key: "Riser / Noise", url: "samples/fx_1.mp3" },
+
+      // --- MELODY (8 ไฟล์) ---
+      { id: "mel_1", title: "Melody Loop 01", category: "melody", bpm: 140, key: "Synth Pluck", url: "samples/melody_1.mp3" },
+      { id: "mel_2", title: "Melody Loop 02", category: "melody", bpm: 140, key: "Color Chord", url: "samples/melody_2.mp3" },
+      { id: "mel_3", title: "Melody Loop 03", category: "melody", bpm: 140, key: "Hyper Lead", url: "samples/melody_3.mp3" },
+      { id: "mel_4", title: "Melody Loop 04", category: "melody", bpm: 140, key: "Vocalized Lead", url: "samples/melody_4.mp3" },
+      { id: "mel_5", title: "Melody Loop 05", category: "melody", bpm: 140, key: "areg", url: "samples/melody_5.mp3" },
+      { id: "mel_6", title: "Melody Loop 06", category: "melody", bpm: 140, key: "areg", url: "samples/melody_6.mp3" },
+      { id: "mel_7", title: "Melody Loop 07", category: "melody", bpm: 140, key: "areg", url: "samples/melody_7.mp3" },
+      { id: "mel_8", title: "Melody Loop 08", category: "melody", bpm: 140, key: "Synth Lead", url: "samples/melody_8.mp3" }
+    ];
+
+    let currentVaultFilter = 'bass-loop';
+    let currentVaultPlayingId = null;
+
+    function playTrack(index) {
+      if (index < 0 || index >= SAMPLES.length) return;
+
+      if (currentTrackIndex === index && isPlaying) {
+        pausePlayback();
+        return;
+      }
+
+      currentVaultPlayingId = null;
+      currentTrackIndex = index;
+      const track = SAMPLES[index];
+
+      audioPlayer.src = encodeURI(track.url);
+      audioPlayer.load();
+
+      const playPromise = audioPlayer.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          isPlaying = true;
+          updatePlayButtonsState();
+        }).catch(err => {
+          console.warn("Playback error:", err);
+          isPlaying = false;
+          updatePlayButtonsState();
+        });
+      }
+
+      document.getElementById('visTitle').textContent = track.title;
+      document.getElementById('visStatus').textContent = `PLAYING • ${track.bpm} BPM`;
+      document.getElementById('bottomTrackTitle').textContent = track.title;
+      document.getElementById('bottomTrackMeta').innerHTML = `<span>${track.bpm} BPM</span> • <span>${track.key}</span>`;
+      document.getElementById('totalTimeLabel').textContent = track.duration;
+    }
+
+    function toggleMainPlayback() {
+      if (currentTrackIndex === -1 && !currentVaultPlayingId) {
+        playTrack(0);
+        return;
+      }
+      if (isPlaying) {
+        pausePlayback();
+      } else {
+        resumePlayback();
+      }
+    }
+
+    function pausePlayback() {
+      isPlaying = false;
+      audioPlayer.pause();
+      updatePlayButtonsState();
+      document.getElementById('visStatus').textContent = 'PAUSED';
+    }
+
+    function resumePlayback() {
+      const playPromise = audioPlayer.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          isPlaying = true;
+          updatePlayButtonsState();
+          if (currentTrackIndex !== -1) {
+            document.getElementById('visStatus').textContent = `PLAYING • ${SAMPLES[currentTrackIndex].bpm} BPM`;
+          }
+        }).catch(err => console.warn(err));
+      }
+    }
+
+    function stepTrack(dir) {
+      let nextIndex = currentTrackIndex + dir;
+      if (nextIndex < 0) nextIndex = SAMPLES.length - 1;
+      if (nextIndex >= SAMPLES.length) nextIndex = 0;
+      playTrack(nextIndex);
+    }
+
+    function seekAudio(event) {
+      if (!audioPlayer.duration) return;
+      const rect = event.currentTarget.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, clickX / rect.width));
+      audioPlayer.currentTime = pct * audioPlayer.duration;
+    }
+
+    audioPlayer.addEventListener('timeupdate', () => {
+      if (!audioPlayer.duration) return;
+      const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+      document.getElementById('currentTimeLabel').textContent = formatSeconds(audioPlayer.currentTime);
+      document.getElementById('totalTimeLabel').textContent = formatSeconds(audioPlayer.duration);
+    });
+
+    audioPlayer.addEventListener('ended', () => {
+      if (currentTrackIndex !== -1) {
+        stepTrack(1);
+      } else {
+        pausePlayback();
+        currentVaultPlayingId = null;
+        updatePlayButtonsState();
+      }
+    });
+
+    // อัปเดตเฉพาะสเตตัสไอคอน โดยไม่สร้าง HTML ใหม่ ทำให้ไม่เด้งซ้ำ
+    function updatePlayButtonsState() {
+      const mainBtnIcon = document.getElementById('mainPlayIcon');
+
+      if (isPlaying) {
+        mainBtnIcon.className = "ph-fill ph-pause text-base";
+        document.getElementById('bottomDiscIcon').className = "ph-fill ph-waveform text-lg animate-pulse text-red-500";
+      } else {
+        mainBtnIcon.className = "ph-fill ph-play text-base";
+        document.getElementById('bottomDiscIcon').className = "ph-fill ph-music-note text-lg text-white";
+      }
+
+      // อัปเดต Showcase Demos (ฝั่งบน)
+      SAMPLES.forEach((sample, idx) => {
+        const itemEl = document.getElementById(`demo-row-${idx}`);
+        const iconEl = document.getElementById(`demo-icon-${idx}`);
+        const btnEl = document.getElementById(`demo-btn-${idx}`);
+        const numEl = document.getElementById(`demo-num-${idx}`);
+        const pingEl = document.getElementById(`demo-ping-${idx}`);
+        
+        if (!itemEl || !iconEl || !btnEl) return;
+
+        const isCurrent = (currentTrackIndex === idx);
+        const isCurrentPlaying = isCurrent && isPlaying;
+
+        if (isCurrent) {
+          itemEl.classList.add('border-red-500/60', 'bg-red-950/25', 'shadow-lg', 'shadow-red-950/30');
+          itemEl.classList.remove('border-zinc-800/80');
+          if (numEl) {
+            numEl.className = "font-mono text-xs text-red-500 font-bold w-4 text-center shrink-0";
+          }
+        } else {
+          itemEl.classList.remove('border-red-500/60', 'bg-red-950/25', 'shadow-lg', 'shadow-red-950/30');
+          itemEl.classList.add('border-zinc-800/80');
+          if (numEl) {
+            numEl.className = "font-mono text-xs text-zinc-600 w-4 text-center shrink-0";
+          }
+        }
+
+        if (isCurrentPlaying) {
+          btnEl.className = "w-10 h-10 rounded-xl bg-red-600 text-white shadow-lg shadow-red-600/50 flex items-center justify-center shrink-0 transition-all ios-btn-bounce";
+          iconEl.className = "ph-fill ph-pause text-sm";
+          if (pingEl) pingEl.classList.remove('hidden');
+        } else {
+          btnEl.className = "w-10 h-10 rounded-xl bg-black border border-zinc-800 text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center shrink-0 transition-all ios-btn-bounce";
+          iconEl.className = "ph-fill ph-play text-sm ml-0.5";
+          if (pingEl) pingEl.classList.add('hidden');
+        }
+      });
+
+      // อัปเดต Sample Vault (ฝั่งล่าง)
+      VAULT_SAMPLES.forEach((item) => {
+        const cardEl = document.getElementById(`vault-card-${item.id}`);
+        const btnEl = document.getElementById(`vault-btn-${item.id}`);
+        const iconEl = document.getElementById(`vault-icon-${item.id}`);
+        const pingEl = document.getElementById(`vault-ping-${item.id}`);
+
+        if (!cardEl || !btnEl || !iconEl) return;
+
+        const isItemPlaying = (currentVaultPlayingId === item.id) && isPlaying;
+
+        if (isItemPlaying) {
+          cardEl.classList.add('border-red-500/60', 'shadow-lg', 'shadow-red-950/30');
+          cardEl.classList.remove('border-zinc-800/80');
+          btnEl.className = "w-9 h-9 rounded-lg bg-red-600 text-white shadow-md shadow-red-600/40 flex items-center justify-center shrink-0 transition-all ios-btn-bounce";
+          iconEl.className = "ph-fill ph-pause text-xs";
+          if (pingEl) pingEl.classList.remove('hidden');
+        } else {
+          cardEl.classList.remove('border-red-500/60', 'shadow-lg', 'shadow-red-950/30');
+          cardEl.classList.add('border-zinc-800/80');
+          btnEl.className = "w-9 h-9 rounded-lg bg-black border border-zinc-800 text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center shrink-0 transition-all ios-btn-bounce";
+          iconEl.className = "ph-fill ph-play text-xs";
+          if (pingEl) pingEl.classList.add('hidden');
+        }
+      });
+    }
+
+    function formatSeconds(sec) {
+      const s = Math.floor(sec || 0);
+      const m = Math.floor(s / 60);
+      const rem = s % 60;
+      return `${m}:${rem < 10 ? '0' : ''}${rem}`;
+    }
+
+    function setGlobalVolume(val) {
+      audioPlayer.volume = val;
+    }
+
+    function playHeroDemo() {
+      playTrack(0);
+      showToast("Playing flagship preview demo!");
+    }
+
+    // Dynamic Multi-Band Pulse Waveform Visualizer
+    function initWaveformVisualizer() {
+      const canvas = document.getElementById('waveformCanvas');
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      function draw() {
+        requestAnimationFrame(draw);
+        const width = canvas.width;
+        const height = canvas.height;
+        const midY = height / 2;
+
+        ctx.clearRect(0, 0, width, height);
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, midY);
+        ctx.lineTo(width, midY);
+        ctx.stroke();
+
+        ctx.beginPath();
+
+        if (!isPlaying) {
+          ctx.strokeStyle = '#3f3f46';
+          ctx.lineWidth = 1.5;
+          ctx.shadowBlur = 0;
+
+          for (let x = 0; x < width; x += 5) {
+            const y = midY + Math.sin(x * 0.05 + Date.now() * 0.002) * 1.5;
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+          return;
+        }
+
+        const points = 96;
+        let freqData = [];
+        const now = Date.now() * 0.007;
+
+        for (let i = 0; i < points; i++) {
+          const norm = i / points;
+          const bass = Math.pow(1 - norm, 2.2) * Math.abs(Math.sin(now * 3.2)) * 0.95;
+          const mid = Math.sin(norm * Math.PI) * Math.abs(Math.sin(now * 5.8 + i * 0.35)) * 0.5;
+          const treble = norm * Math.abs(Math.sin(now * 11 + i * 0.8)) * 0.4;
+          freqData.push(Math.min(1.0, bass + mid + treble));
+        }
+
+        ctx.shadowColor = '#ef4444';
+        ctx.shadowBlur = 10;
+        ctx.lineWidth = 2.2;
+
+        const grad = ctx.createLinearGradient(0, 0, width, 0);
+        grad.addColorStop(0, '#dc2626');
+        grad.addColorStop(0.2, '#ef4444');
+        grad.addColorStop(0.5, '#ffffff');
+        grad.addColorStop(0.8, '#ef4444');
+        grad.addColorStop(1, '#dc2626');
+        ctx.strokeStyle = grad;
+
+        const sliceWidth = width / (points - 1);
+
+        for (let i = 0; i < points; i++) {
+          const x = i * sliceWidth;
+          const val = freqData[i];
+          const dir = (i % 2 === 0) ? -1 : 1;
+          const amp = val * (height * 0.44);
+          const y = midY + (dir * amp);
+
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+      draw();
+    }
+
+    // ================= MODERN SHOWCASE DEMOS RACK =================
+    function renderDemosList() {
+      const container = document.getElementById('demosListContainer');
+      if (!container) return;
+
+      container.innerHTML = SAMPLES.map((sample, idx) => {
+        return `
+          <div id="demo-row-${idx}" class="reveal-item flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-zinc-950/80 hover:bg-zinc-900 border border-zinc-800/80 hover:border-zinc-700 transition-all group backdrop-blur-xl shadow-lg" style="transition-delay: ${idx * 60}ms;">
+            
+            <!-- ด้านซ้าย: ลำดับ, ปุ่ม Play ทรงกลมโมเดิร์น, ชื่อเพลง -->
+            <div class="flex items-center gap-3.5 min-w-0">
+              <span id="demo-num-${idx}" class="font-mono text-xs text-zinc-600 w-4 text-center shrink-0">
+                0${idx + 1}
+              </span>
+
+              <button id="demo-btn-${idx}" onclick="playTrack(${idx})" class="w-10 h-10 rounded-xl bg-black border border-zinc-800 text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center shrink-0 transition-all ios-btn-bounce shadow-sm">
+                <i id="demo-icon-${idx}" class="ph-fill ph-play text-sm ml-0.5"></i>
+              </button>
+
+              <div class="min-w-0">
+                <div class="text-sm font-bold text-white tracking-wide truncate group-hover:text-red-400 transition-colors flex items-center gap-2">
+                  <span>${sample.title}</span>
+                  <span id="demo-ping-${idx}" class="hidden flex h-2 w-2 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                  </span>
+                </div>
+                <div class="text-[11px] text-zinc-400 font-mono flex items-center gap-2 mt-0.5">
+                  <span class="text-red-400/90 font-medium">${sample.category}</span>
+                  <span>•</span>
+                  <span>${sample.bpm} BPM</span>
+                  <span>•</span>
+                  <span>${sample.key}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ด้านขวา: เวลาเล่นเท่านั้น -->
+            <div class="flex items-center gap-3.5 shrink-0 pl-3">
+              <span class="text-xs font-mono text-zinc-400 font-medium">${sample.duration}</span>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+
+      observeScrollItems();
+    }
+
+    // ================= HIGH-END VAULT LOGIC =================
+    function renderVaultGrid() {
+      const container = document.getElementById('vaultSamplesGrid');
+      if (!container) return;
+
+      const filtered = VAULT_SAMPLES.filter(s => s.category === currentVaultFilter);
+
+      container.innerHTML = filtered.map((item, idx) => {
+        return `
+          <div id="vault-card-${item.id}" class="reveal-item flex items-center justify-between p-3.5 rounded-xl bg-zinc-950/80 hover:bg-zinc-900 border border-zinc-800/80 hover:border-zinc-700 transition-all group backdrop-blur-xl shadow-md" style="transition-delay: ${idx * 30}ms;">
+            
+            <!-- Left: Play button and metadata -->
+            <div class="flex items-center gap-3 min-w-0">
+              <button id="vault-btn-${item.id}" onclick="playVaultItem('${item.id}', '${item.url}', '${item.title}', '${item.bpm}', '${item.key}')" class="w-9 h-9 rounded-lg bg-black border border-zinc-800 text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center shrink-0 transition-all ios-btn-bounce">
+                <i id="vault-icon-${item.id}" class="ph-fill ph-play text-xs"></i>
+              </button>
+              
+              <div class="min-w-0">
+                <div class="text-xs font-bold text-white truncate group-hover:text-red-400 transition-colors flex items-center gap-1.5">
+                  <span>${item.title}</span>
+                  <span id="vault-ping-${item.id}" class="hidden w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
+                </div>
+                <div class="text-[10px] text-zinc-400 font-mono flex items-center gap-1 mt-0.5">
+                  <span class="text-red-400 font-semibold uppercase">${item.category.replace('-', ' ')}</span>
+                  <span>•</span>
+                  <span>${item.bpm}</span>
+                  <span>•</span>
+                  <span>${item.key}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Dynamic Mini Wave Strip -->
+            <div class="flex items-center gap-1.5 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity">
+              <span class="h-2 w-0.5 bg-zinc-600 rounded-full"></span>
+              <span class="h-4 w-0.5 bg-zinc-500 rounded-full"></span>
+              <span class="h-5 w-0.5 bg-zinc-600 rounded-full"></span>
+              <span class="h-3 w-0.5 bg-zinc-500 rounded-full"></span>
+              <span class="h-4 w-0.5 bg-zinc-600 rounded-full"></span>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+
+      observeScrollItems();
+    }
+
+    function filterVault(category) {
+      currentVaultFilter = category;
+      document.querySelectorAll('.vault-tab-btn').forEach(btn => {
+        if (btn.dataset.category === category) {
+          btn.className = 'vault-tab-btn px-4 py-2 rounded-xl bg-red-600 text-white font-bold transition-all shadow-lg shadow-red-600/40';
+        } else {
+          btn.className = 'vault-tab-btn px-4 py-2 rounded-xl text-zinc-400 hover:text-white transition-all font-semibold';
+        }
+      });
+      renderVaultGrid();
+      updatePlayButtonsState();
+    }
+
+    function playVaultItem(id, url, title, bpm, key) {
+      if (currentVaultPlayingId === id && isPlaying) {
+        pausePlayback();
+        return;
+      }
+
+      currentVaultPlayingId = id;
+      currentTrackIndex = -1;
+
+      audioPlayer.src = encodeURI(url);
+      audioPlayer.load();
+      audioPlayer.play().then(() => {
+        isPlaying = true;
+        updatePlayButtonsState();
+      }).catch(err => console.warn(err));
+
+      document.getElementById('visTitle').textContent = title;
+      document.getElementById('visStatus').textContent = `PLAYING • ${bpm}`;
+      document.getElementById('bottomTrackTitle').textContent = title;
+      document.getElementById('bottomTrackMeta').innerHTML = `<span>${bpm}</span> • <span>${key}</span>`;
+    }
+
+    // Scroll Reveal Intersection Observer (ทำงานครั้งเดียวตอนเลื่อนจอลงมา)
+    function observeScrollItems() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      }, {
+        threshold: 0.05,
+        rootMargin: '0px 0px -20px 0px'
+      });
+
+      document.querySelectorAll('.reveal-item:not(.revealed)').forEach(item => {
+        observer.observe(item);
+      });
+    }
+
+    function openCheckoutModal(title, price) {
+      const modal = document.getElementById('checkoutModal');
+      document.getElementById('modalPackTitle').textContent = title;
+      document.getElementById('modalPackPrice').textContent = price === 0 ? "FREE" : `$${price.toFixed(2)}`;
+      document.getElementById('modalSubmitText').textContent = price === 0 ? "Get Free Direct Download" : `Purchase • $${price.toFixed(2)}`;
+      
+      modal.classList.remove('hidden');
+      setTimeout(() => modal.classList.remove('opacity-0'), 10);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('checkoutModal');
+      modal.classList.add('opacity-0');
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    function handleOrderSubmission(e) {
+      e.preventDefault();
+      closeModal();
+      showToast("Order confirmed! Download link has been dispatched to your email.");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastMessage');
+      document.getElementById('toastText').textContent = msg;
+      toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-[-100px]', 'opacity-0');
+      }, 3500);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderDemosList();
+      renderVaultGrid();
+      initWaveformVisualizer();
+      observeScrollItems();
+    });
+  </script>
+</body>
+</html>
